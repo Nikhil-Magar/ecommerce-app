@@ -4,7 +4,7 @@ import Logo from "./Logo.png";
 
 export default function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark" style={{ minHeight: '60px' }}>
+    <nav className="navbar navbar-expand-lg navbar-dark" style={{ minHeight: '60px', background: 'linear-gradient(90deg, #3A0CA3, #7209B7)' }}>
       <div className="container-fluid">
 
         <Link className="navbar-brand" to="/">
@@ -43,7 +43,7 @@ export default function Navbar() {
               placeholder="Search"
               aria-label="Search"
             />
-            <button className="btn btn-outline-success" type="submit">
+            <button className="btn btn-primary" type="submit">
               Search
             </button>
           </form>

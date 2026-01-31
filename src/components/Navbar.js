@@ -34,18 +34,9 @@ export default function Navbar() {
               <Link className="nav-link" to="/about">About</Link>
             </li>
 
-            <li className="nav-item">
-              <Link className="nav-link" to="/login">Login</Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to="/Signup">Signup</Link>
-            </li>
-
-
           </ul>
 
-          <form className="d-flex" role="search">
+          <form className="d-flex me-2" role="search">
             <input
               className="form-control me-2"
               type="search"
@@ -56,6 +47,15 @@ export default function Navbar() {
               Search
             </button>
           </form>
+
+          <ul className="navbar-nav mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link className="nav-link" to="/login">Login</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/signup">Signup</Link>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>

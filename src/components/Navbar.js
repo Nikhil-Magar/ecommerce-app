@@ -38,31 +38,19 @@ export default function Navbar() {
               <Link className="nav-link" to="/login">Login</Link>
             </li>
 
-            <li className="nav-item dropdown">
-              <button
-                className="nav-link dropdown-toggle btn btn-link"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Ladder
-              </button>
-
-              <ul className="dropdown-menu">
-                <li><button className="dropdown-item" type="button">Action</button></li>
-                <li><button className="dropdown-item" type="button">Another action</button></li>
-                <li><hr className="dropdown-divider" /></li>
-                <li><button className="dropdown-item" type="button">Something else</button></li>
-              </ul>
+            <li className="nav-item">
+              <Link className="nav-link" to="/Signup">Signup</Link>
             </li>
+
+
           </ul>
 
           <form className="d-flex" role="search">
-            <input 
-              className="form-control me-2" 
-              type="search" 
-              placeholder="Search" 
-              aria-label="Search" 
+            <input
+              className="form-control me-2"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
             />
             <button className="btn btn-outline-success" type="submit">
               Search

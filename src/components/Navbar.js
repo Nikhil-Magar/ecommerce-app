@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from "./Logo.png";
+import Logo from './Logo.png';
+import './navbar.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark" style={{ minHeight: '60px', background: 'linear-gradient(90deg, #3A0CA3, #7209B7)' }}>
+    <nav className="navbar navbar-expand-lg">
       <div className="container-fluid">
 
         <Link className="navbar-brand" to="/">

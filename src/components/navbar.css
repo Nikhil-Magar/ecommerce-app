@@ -1,12 +1,33 @@
-.navbar{
-
-    position:sticky;
-    top:0;
-    width:100%;
-    min-height:60px;
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    min-height: 60px;
     background: linear-gradient(90deg, #3A0CA3, #7209B7);
-    display:flex;
-    text:dark;
-    align-items:center;
+    display: flex;
+    color: white;
+    align-items: center;
+    z-index: 1000;
+}
 
+/* Active link styling */
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fff !important;
+}
+
+/* Hover effect */
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Make all nav links white */
+.nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 8px 15px;
+    transition: all 0.3s ease;
 }

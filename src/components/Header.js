@@ -1,9 +1,10 @@
 import React from 'react';
 import Navbar from './Navbar';
-import Home from '../pages/Home';
 import About from '../pages/about';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
+import Home from '../pages/Home';
+import Welcome from '../pages/Welcome';
 import { Routes, Route } from "react-router-dom";
 
 export default function Header() {
@@ -11,7 +12,8 @@ export default function Header() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Welcome />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

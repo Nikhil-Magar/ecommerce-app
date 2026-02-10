@@ -8,6 +8,7 @@
     color: white;
     align-items: center;
     z-index: 1000;
+    justify-content:center;
 }
 
 /* Active link styling */

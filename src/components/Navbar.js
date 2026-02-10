@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from './Logo.png';
 import { NavLink } from 'react-router-dom';
 import './navbar.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -9,7 +10,7 @@ export default function Navbar() {
       <div className="container-fluid">
 
         <NavLink className="navbar-brand" to="/">
-          My App
+         <img src={logo} alt="Logo" width="60" height="40" className="mx-2" />
         </NavLink>
 
         <button
@@ -28,7 +29,7 @@ export default function Navbar() {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
             <li className="nav-item">
-              <NavLink className="nav-link" to="/">Home</NavLink>
+              <NavLink className="nav-link" to="/home">Home</NavLink>
             </li>
 
             <li className="nav-item">

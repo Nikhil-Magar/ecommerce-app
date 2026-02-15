@@ -10,7 +10,7 @@ export default function Navbar() {
       <div className="container-fluid">
 
         <NavLink className="navbar-brand" to="/">
-         <img src={logo} alt="Logo" width="60" height="40" className="mx-2" />
+          <img src={logo} alt="Logo" width="60" height="40" className="mx-2" />
         </NavLink>
 
         <button
@@ -27,15 +27,12 @@ export default function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-
             <li className="nav-item">
               <NavLink className="nav-link" to="/home">Home</NavLink>
             </li>
-
             <li className="nav-item">
               <NavLink className="nav-link" to="/about">About</NavLink>
             </li>
-
           </ul>
 
           <form className="d-flex me-2" role="search">
@@ -57,8 +54,14 @@ export default function Navbar() {
             <li className="nav-item">
               <NavLink className="nav-link" to="/signup">Signup</NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/admin/login">
+                <span style={{color: '#667eea', fontWeight: 'bold'}}>Admin</span>
+              </NavLink>
+            </li>
           </ul>
         </div>
+
       </div>
     </nav>
   );

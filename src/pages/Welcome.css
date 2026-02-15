@@ -1,11 +1,15 @@
+/* ===== Container ===== */
 .welcome-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 120px); 
+  min-height: calc(100vh - 120px);
   text-align: center;
+  padding: 20px;
 }
 
+/* ===== Animated Title ===== */
 .animated-title {
   font-size: 3rem;
   font-weight: bold;
@@ -17,18 +21,14 @@
   animation: gradient-shift 3s ease infinite, slide-in 1s ease-out;
 }
 
+/* ===== Gradient Animation ===== */
 @keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
+/* ===== Slide Animation ===== */
 @keyframes slide-in {
   0% {
     opacity: 0;
@@ -38,4 +38,28 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ===== Explore Button ===== */
+.explore-btn {
+  margin-top: 30px;
+  padding: 14px 36px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(45deg, #7209B7, #9D4EDD);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(114, 9, 183, 0.35);
+}
+
+.explore-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(114, 9, 183, 0.5);
+}
+
+.explore-btn:active {
+  transform: scale(0.97);
 }

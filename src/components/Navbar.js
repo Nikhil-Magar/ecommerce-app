@@ -1,10 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './Logo.png';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './navbar.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function Navbar() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check for logged in user
+    const checkUser = () => {
+      const user = localStorage.getItem('currentUser');
+      const adminUser = localStorage.getItem('adminUser');
+      
+      if (adminUser) {
+        setCurrentUser(JSON.parse(adminUser));
+      } else if (user) {
+        setCurrentUser(JSON.parse(user));
+      } else {
+        setCurrentUser(null);
+      }
+    };
+
+    checkUser();
+
+    // Listen for storage changes (when user logs in/out in another tab)
+    window.addEventListener('storage', checkUser);
+    
+    // Custom event listener for login/logout
+    window.addEventListener('userChanged', checkUser);
+    
+    return () => {
+      window.removeEventListener('storage', checkUser);
+      window.removeEventListener('userChanged', checkUser);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('adminUser');
+    setCurrentUser(null);
+    navigate('/');
+    window.location.reload(); // Refresh to update auth state
+  };
+
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="container-fluid">
@@ -48,20 +88,46 @@ export default function Navbar() {
           </form>
 
           <ul className="navbar-nav mb-2 mb-lg-0">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/login">Login</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/signup">Signup</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/admin/login">
-                <span style={{color: '#667eea', fontWeight: 'bold'}}>Admin</span>
-              </NavLink>
-            </li>
+            {currentUser ? (
+              <>
+                <li className="nav-item">
+                  <span className="nav-link user-greeting">
+                    👋 Hello, {currentUser.name}
+                  </span>
+                </li>
+                {currentUser.role === 'admin' && (
+                  <li className="nav-item">
+                    <NavLink className="nav-link admin-link" to="/admin">
+                      ⚙️ Admin Panel
+                    </NavLink>
+                  </li>
+                )}
+                <li className="nav-item">
+                  <button 
+                    className="nav-link logout-btn" 
+                    onClick={handleLogout}
+                  >
+                    🚪 Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/login">Login</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/signup">Signup</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link admin-link" to="/admin/login">
+                    Admin
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
-
       </div>
     </nav>
   );

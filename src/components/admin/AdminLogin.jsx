@@ -20,17 +20,23 @@ const AdminLogin = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent page refresh
     setLoading(true);
     setError('');
 
+    console.log('Attempting login with:', formData.email);
+
     const result = await login(formData.email, formData.password);
     
+    console.log('Login result:', result);
+
     if (!result.success) {
       setError(result.error);
+      setLoading(false);
+    } else {
+      console.log('Login successful! Redirecting...');
+      // Success - AuthContext will handle redirect
     }
-    
-    setLoading(false);
   };
 
   return (
@@ -58,6 +64,7 @@ const AdminLogin = () => {
               onChange={handleChange}
               placeholder="admin@ecommerce.com"
               required
+              autoComplete="email"
             />
           </div>
 
@@ -70,6 +77,7 @@ const AdminLogin = () => {
               onChange={handleChange}
               placeholder="••••••••"
               required
+              autoComplete="current-password"
             />
           </div>
 

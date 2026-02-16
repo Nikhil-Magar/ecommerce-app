@@ -19,6 +19,11 @@ const Dashboard = () => {
 
   const loadDashboardData = async () => {
     try {
+      // Wait for database to be ready
+      if (!db.db) {
+        await db.init();
+      }
+
       const products = await db.getAll('products');
       const users = await db.getAll('users');
       const orders = await db.getAll('orders');

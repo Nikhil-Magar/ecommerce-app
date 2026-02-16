@@ -1,55 +1,115 @@
-import React from 'react'
+import React, { useState } from 'react';
+import db from '../db/indexedDB';
+import './Login.css';
 
 export default function Login() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setError('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      // Initialize database if needed
+      if (!db.db) await db.init();
+
+      // Find user by email
+      const users = await db.getByIndex('users', 'email', formData.email);
+      const user = users.find(u => u.password === formData.password && u.status === 'active');
+
+      if (user) {
+        // Save user to localStorage
+        const { password, ...userWithoutPassword } = user;
+        localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
+
+        alert(`✅ Welcome back, ${user.name}!`);
+        
+        // Force page reload to update navbar
+        window.location.href = '/';
+      } else {
+        setError('Invalid email or password');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Login failed. Please try again.');
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="container">
-      <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-4">
-          <div className="card shadow-sm mt-5">
-            <div className="card-body p-4">
-              <h2 className="card-title text-center mb-4">Login</h2>
-              
-              <form>
-                <div className="mb-3">
-                  <label htmlFor="emailInput" className="form-label">
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="emailInput"
-                    placeholder="name@example.com"
-                  />
-                </div>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">Welcome Back</h2>
+        <p className="auth-subtitle">Login to your account</p>
 
-                <div className="mb-3">
-                  <label htmlFor="passwordInput" className="form-label">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="passwordInput"
-                    placeholder="Enter your password"
-                  />
-                </div>
-
-                <div className="d-grid">
-                  <button type="submit" className="btn btn-primary">
-                    Login
-                  </button>
-                </div>
-              </form>
-
-              <div className="text-center mt-3">
-                <small className="text-muted">
-                  Don't have an account? <a href="/signup">Sign up</a>
-                </small>
-              </div>
-            </div>
+        {error && (
+          <div className="error-message">
+            {error}
           </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="form-input"
+              placeholder="your@email.com"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="form-input"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`auth-button ${loading ? 'disabled' : ''}`}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+
+        <div className="auth-links">
+          <p className="auth-footer">
+            Don't have an account?{' '}
+            <a href="/signup" className="auth-link">Sign up here</a>
+          </p>
+          <p className="auth-footer">
+            Admin?{' '}
+            <a href="/admin/login" className="auth-link">Admin Login</a>
+          </p>
         </div>
       </div>
     </div>
-  )
+  );
 }

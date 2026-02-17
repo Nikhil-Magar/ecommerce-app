@@ -9,6 +9,7 @@ import About from './pages/about';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Welcome from './pages/Welcome';
+import CategoryPage from './pages/CategoryPage';
 
 // Import admin components
 import AdminLogin from './components/admin/AdminLogin';
@@ -20,16 +21,12 @@ import Header from './components/Header';
 import './App.css';
 
 // Component to conditionally show Header
-// Shows on public pages (Home, About, etc.)
-// Hides on admin pages (/admin/*)
 const ConditionalHeader = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
   
-  // Don't show header on admin pages
   if (isAdminRoute) return null;
   
-  // Show header on all public pages
   return <Header />;
 };
 
@@ -57,7 +54,6 @@ const ProtectedRoute = ({ children }) => {
 
 function AppContent() {
   useEffect(() => {
-    // Initialize database on app start
     const initDB = async () => {
       try {
         await db.init();
@@ -72,22 +68,19 @@ function AppContent() {
 
   return (
     <Router>
-      {/* Conditional Header - Shows on public pages, hidden on /admin */}
       <ConditionalHeader />
       
       <Routes>
-        {/* ========== PUBLIC ROUTES (Customer-facing) ========== */}
+        {/* PUBLIC ROUTES */}
         <Route path="/" element={<Welcome />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         
-        {/* ========== ADMIN ROUTES ========== */}
-        {/* Admin Login (No auth required) */}
+        {/* ADMIN ROUTES */}
         <Route path="/admin/login" element={<AdminLogin />} />
-        
-        {/* Admin Panel (Auth required) */}
         <Route 
           path="/admin/*" 
           element={
@@ -97,8 +90,7 @@ function AppContent() {
           } 
         />
         
-        {/* ========== FALLBACK ROUTE ========== */}
-        {/* Redirect any unknown routes to welcome */}
+        {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
@@ -114,5 +106,3 @@ function App() {
 }
 
 export default App;
-
-

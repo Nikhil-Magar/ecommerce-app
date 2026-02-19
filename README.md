@@ -1,164 +1,152 @@
-🛒 E-Commerce Website
+# 🛒 E-Commerce Website
 
-A modern full-featured e-commerce web application built using React.js with local database storage and admin analytics dashboard.
+A modern, full-featured e-commerce web application built with **React.js**, **Node.js**, and **MongoDB** — complete with a customer storefront, secure authentication, and a powerful admin analytics dashboard.
 
-🚀 Features
-🛍 Customer Side
+---
 
-Browse products
+## 🚀 Features
 
-Product categories
+### 🛍 Customer Side
+- Browse and search products
+- Filter by product categories
+- Add items to cart
+- Checkout system with order placement
+- View order history
 
-Add to cart
+### 🔐 Authentication
+- User Login / Signup
+- Secure session management
 
-Checkout system
+### 🧑‍💼 Admin Panel
+- Product management (add, edit, delete)
+- Order management and tracking
+- Analytics dashboard with sales insights
+- Revenue tracking and top product analysis
 
-Order placement
+---
 
-Order history
+## 🛠 Tech Stack
 
-🔐 Authentication
+| Layer     | Technology        |
+|-----------|-------------------|
+| Frontend  | React.js          |
+| Backend   | Node.js, Express  |
+| Database  | MongoDB           |
 
-Login / Signup
+---
 
-User session management
+## 📦 Installation
 
-🧑‍💼 Admin Panel
+### Prerequisites
 
-Product management
+Make sure you have the following installed:
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [MongoDB](https://www.mongodb.com/) (local or Atlas)
+- [Git](https://git-scm.com/)
 
-Order management
+### 1. Clone the Repository
 
-Analytics dashboard
+```bash
+git clone https://github.com/your-username/ecommerce-app.git
+cd ecommerce-app
+```
 
-Sales insights
+### 2. Install Backend Dependencies
 
-Revenue tracking
-
-Top product analysis
-
-📊 Analytics Includes
-
-Revenue by month
-
-Top selling products
-
-Orders by status
-
-Category breakdown
-
-Average order value
-
-🧰 Tech Stack
-Frontend
-
-React.js
-
-React Router
-
-CSS / Custom Styling
-
-Storage
-
-IndexedDB (Local Database)
-
-Development Tools
-
-ESLint
-
-Webpack
-
-PostCSS
-
-📁 Project Structure
-src/
- ├ components/
- │ ├ admin/
- │ │ ├ Analytics.js
- │ │ └ AdminDashboard.js
- │ └ common/
- │
- ├ pages/
- │ ├ Welcome.js
- │ ├ Home.js
- │ ├ Login.js
- │ └ Signup.js
- │
- ├ db/
- │ └ indexedDB.js
- │
- ├ App.js
- └ index.js
-
-⚙️ Installation & Setup
-1️⃣ Clone Repository
-git clone <your-repo-url>
-cd my-app
-
-2️⃣ Install Dependencies
+```bash
+cd back-end
 npm install
+```
 
-3️⃣ Run Development Server
+### 3. Configure Environment Variables
+
+Create a `.env` file inside the `back-end/` directory:
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+```
+
+### 4. Install Frontend Dependencies
+
+```bash
+cd ../front-end
+npm install
+```
+
+### 5. Run the Application
+
+**Start the backend:**
+```bash
+cd back-end
+npm run dev
+```
+
+**Start the frontend:**
+```bash
+cd front-end
 npm start
+```
 
+The app will be running at `http://localhost:3000` and the API at `http://localhost:5000`.
 
-App will run on:
+---
 
-http://localhost:3000
+## 💡 Usage
 
-📦 Build for Production
-npm run build
+### As a Customer
+1. Register or log in to your account.
+2. Browse products and filter by category.
+3. Add items to your cart and proceed to checkout.
+4. Place your order and track it via Order History.
 
-🗄 Database
+### As an Admin
+1. Log in with admin credentials.
+2. Navigate to the **Admin Panel** from the dashboard.
+3. Manage products — add new listings, update details, or remove items.
+4. View and manage incoming orders.
+5. Explore the **Analytics Dashboard** for sales insights, revenue tracking, and top-performing products.
 
-This project uses IndexedDB for local storage.
+---
 
-Stores:
+## 📁 Project Structure
 
-Products
+```
+ecommerce-app/
+├── back-end/                  # Node.js + Express backend
+│   ├── models/
+│   │   ├── Product.js
+│   │   └── Users.js
+│   ├── roots/
+│   │   └── package.json
+│   ├── routes/
+│   │   ├── categories.js
+│   │   ├── orders.js
+│   │   ├── products.js
+│   │   └── Users.js
+│   ├── .env
+│   ├── package.json
+│   └── Server.js
+├── front-end/                 # React frontend
+│   ├── public/
+│   ├── src/
+│   ├── .gitignore
+│   ├── package.json
+│   └── package-lock.json
+├── images/
+├── package.json
+└── README.md
+```
 
-Orders
+---
 
-Users (if implemented)
+## 🤝 Contributing
 
-📈 Admin Analytics Logic
+Contributions are welcome! Feel free to open an issue or submit a pull request for improvements, bug fixes, or new features.
 
-Analytics calculates:
+---
 
-Sales filtered by time range
+## 📄 License
 
-Product sales quantity
-
-Monthly revenue
-
-Category distribution
-
-Order status counts
-
-🧪 Future Improvements (Optional Ideas)
-
-Payment Gateway Integration
-
-Cloud Database (MongoDB / Firebase)
-
-Real Charts (Chart.js / Recharts)
-
-Product Image Upload
-
-Email Notifications
-
-Real-time Order Tracking
-
-Role-based Admin Access
-
-🎨 UI Features
-
-Animated Welcome Page
-
-Gradient UI Theme
-
-Responsive Layout
-
-Modern Dashboard Cards
-
-Interactive Charts UI
+This project is licensed under the [MIT License](LICENSE).

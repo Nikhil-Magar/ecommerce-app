@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { CartProvider } from './contexts/CartContext';
 import db from './db/indexedDB';
 
 // Import your existing pages
@@ -10,6 +11,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Welcome from './pages/Welcome';
 import CategoryPage from './pages/CategoryPage';
+import Cart from './pages/Cart';
 
 // Import admin components
 import AdminLogin from './components/admin/AdminLogin';
@@ -68,31 +70,34 @@ function AppContent() {
 
   return (
     <Router>
-      <ConditionalHeader />
-      
-      <Routes>
-        {/* PUBLIC ROUTES */}
-        <Route path="/" element={<Welcome />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/category/:categoryName" element={<CategoryPage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+      <CartProvider>
+        <ConditionalHeader />
         
-        {/* ADMIN ROUTES */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route 
-          path="/admin/*" 
-          element={
-            <ProtectedRoute>
-              <AdminPanel />
-            </ProtectedRoute>
-          } 
-        />
-        
-        {/* FALLBACK */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+        <Routes>
+          {/* PUBLIC ROUTES */}
+          <Route path="/" element={<Welcome />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/category/:categoryName" element={<CategoryPage />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          
+          {/* ADMIN ROUTES */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route 
+            path="/admin/*" 
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* FALLBACK */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </CartProvider>
     </Router>
   );
 }

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import logo from './Logo.png';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
 import './navbar.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function Navbar() {
   const [currentUser, setCurrentUser] = useState(null);
+  const { getTotalItems } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -86,6 +88,16 @@ export default function Navbar() {
               Search
             </button>
           </form>
+
+          {/* Cart Icon - Far Right */}
+          <div className="cart-icon-container">
+            <NavLink to="/cart" className="cart-icon-link">
+              <span className="cart-icon">🛒</span>
+              {getTotalItems() > 0 && (
+                <span className="cart-badge-top">{getTotalItems()}</span>
+              )}
+            </NavLink>
+          </div>
 
           <ul className="navbar-nav mb-2 mb-lg-0">
             {currentUser ? (

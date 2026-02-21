@@ -152,6 +152,10 @@
   cursor: not-allowed;
 }
 
+.add-to-cart-btn.in-cart {
+  background: #48bb78;
+}
+
 /* No Products */
 .no-products {
   text-align: center;

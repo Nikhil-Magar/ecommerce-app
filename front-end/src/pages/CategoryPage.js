@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import db from '../db/indexedDB';
+import { useCart } from '../contexts/CartContext';
 import './CategoryPage.css';
 
 export default function CategoryPage() {
   const { categoryName } = useParams();
   const navigate = useNavigate();
+  const { addToCart, isInCart } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,6 +30,11 @@ export default function CategoryPage() {
       console.error('Error loading products:', error);
       setLoading(false);
     }
+  };
+
+  const handleAddToCart = (product) => {
+    addToCart(product, 1);
+    alert(`✅ ${product.name} added to cart!`);
   };
 
   if (loading) {
@@ -72,10 +79,16 @@ export default function CategoryPage() {
                   </span>
                 </div>
                 <button 
-                  className="add-to-cart-btn"
+                  className={`add-to-cart-btn ${isInCart(product.id) ? 'in-cart' : ''}`}
+                  onClick={() => handleAddToCart(product)}
                   disabled={product.stock === 0}
                 >
-                  {product.stock > 0 ? '🛒 Add to Cart' : 'Out of Stock'}
+                  {product.stock > 0 
+                    ? isInCart(product.id) 
+                      ? '✓ In Cart' 
+                      : '🛒 Add to Cart'
+                    : 'Out of Stock'
+                  }
                 </button>
               </div>
             </div>

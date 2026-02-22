@@ -8,8 +8,7 @@ export default function Cart() {
   const navigate = useNavigate();
 
   const handleCheckout = () => {
-    alert('Checkout functionality coming soon!');
-    // navigate('/checkout');
+    navigate('/checkout');
   };
 
   if (cartItems.length === 0) {

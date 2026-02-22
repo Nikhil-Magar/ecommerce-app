@@ -12,6 +12,7 @@ import Signup from './pages/Signup';
 import Welcome from './pages/Welcome';
 import CategoryPage from './pages/CategoryPage';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 
 // Import admin components
 import AdminLogin from './components/admin/AdminLogin';
@@ -79,6 +80,7 @@ function AppContent() {
           <Route path="/home" element={<Home />} />
           <Route path="/category/:categoryName" element={<CategoryPage />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

@@ -77,28 +77,7 @@ export default function Navbar() {
             </li>
           </ul>
 
-          <form className="d-flex me-2" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-primary" type="submit">
-              Search
-            </button>
-          </form>
-
-          {/* Cart Icon - Far Right */}
-          <div className="cart-icon-container">
-            <NavLink to="/cart" className="cart-icon-link">
-              <span className="cart-icon">🛒</span>
-              {getTotalItems() > 0 && (
-                <span className="cart-badge-top">{getTotalItems()}</span>
-              )}
-            </NavLink>
-          </div>
-
+          {/* User Menu - Middle */}
           <ul className="navbar-nav mb-2 mb-lg-0">
             {currentUser ? (
               <>
@@ -131,14 +110,32 @@ export default function Navbar() {
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/signup">Signup</NavLink>
                 </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link admin-link" to="/admin/login">
-                    Admin
-                  </NavLink>
-                </li>
               </>
             )}
           </ul>
+
+          {/* Search & Cart - Far Right */}
+          <form className="d-flex me-2" role="search">
+            <input
+              className="form-control me-2"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <button className="btn btn-primary" type="submit">
+              Search
+            </button>
+          </form>
+
+          {/* Cart Icon - Far Right */}
+          <div className="cart-icon-container">
+            <NavLink to="/cart" className="cart-icon-link">
+              <span className="cart-icon">🛒</span>
+              {getTotalItems() > 0 && (
+                <span className="cart-badge-top">{getTotalItems()}</span>
+              )}
+            </NavLink>
+          </div>
         </div>
       </div>
     </nav>

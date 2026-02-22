@@ -10,6 +10,9 @@ export default function CategoryPage() {
   const { addToCart, isInCart } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('success');
 
   useEffect(() => {
     loadCategoryProducts();
@@ -32,9 +35,32 @@ export default function CategoryPage() {
     }
   };
 
+  const checkUserLoggedIn = () => {
+    const currentUser = localStorage.getItem('currentUser');
+    const adminUser = localStorage.getItem('adminUser');
+    return !!(currentUser || adminUser);
+  };
+
   const handleAddToCart = (product) => {
+    // Check if user is logged in
+    if (!checkUserLoggedIn()) {
+      setAlertType('error');
+      setAlertMessage('Please login to add items to cart');
+      setShowAlert(true);
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+      return;
+    }
+
+    // Add to cart
     addToCart(product, 1);
-    alert(`✅ ${product.name} added to cart!`);
+    setAlertType('success');
+    setAlertMessage(`✅ ${product.name} added to cart!`);
+    setShowAlert(true);
+    
+    // Hide alert after 3 seconds
+    setTimeout(() => setShowAlert(false), 3000);
   };
 
   if (loading) {
@@ -48,6 +74,13 @@ export default function CategoryPage() {
 
   return (
     <div className="category-page">
+      {/* Alert Notification */}
+      {showAlert && (
+        <div className={`alert-notification ${alertType}`}>
+          {alertType === 'error' ? '⚠️' : '✅'} {alertMessage}
+        </div>
+      )}
+
       <div className="category-header">
         <button className="back-button" onClick={() => navigate('/home')}>
           ← Back to Home

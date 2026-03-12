@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
+import SplashCursor from './components/SplashCursor';
 import db from './db/indexedDB';
 
 // Import your existing pages
@@ -72,6 +73,7 @@ function AppContent() {
   return (
     <Router>
       <CartProvider>
+        <SplashCursor />
         <ConditionalHeader />
         
         <Routes>

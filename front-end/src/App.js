@@ -14,6 +14,7 @@ import Welcome from './pages/Welcome';
 import CategoryPage from './pages/CategoryPage';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import SearchResults from './pages/SearchResults';
 
 // Import admin components
 import AdminLogin from './components/admin/AdminLogin';
@@ -81,6 +82,7 @@ function AppContent() {
           <Route path="/" element={<Welcome />} />
           <Route path="/home" element={<Home />} />
           <Route path="/category/:categoryName" element={<CategoryPage />} />
+          <Route path="/search" element={<SearchResults />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/about" element={<About />} />

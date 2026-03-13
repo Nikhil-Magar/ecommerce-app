@@ -9,6 +9,7 @@ export default function Navbar() {
   const [currentUser, setCurrentUser] = useState(null);
   const { getTotalItems } = useCart();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Check for logged in user
@@ -45,6 +46,14 @@ export default function Navbar() {
     setCurrentUser(null);
     navigate('/');
     window.location.reload(); // Refresh to update auth state
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery(''); // Clear search after navigation
+    }
   };
 
   return (
@@ -115,12 +124,14 @@ export default function Navbar() {
           </ul>
 
           {/* Search & Cart - Far Right */}
-          <form className="d-flex me-2" role="search">
+          <form className="d-flex me-2" role="search" onSubmit={handleSearch}>
             <input
               className="form-control me-2"
               type="search"
-              placeholder="Search"
+              placeholder="Search products..."
               aria-label="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button className="btn btn-primary" type="submit">
               Search

@@ -15,6 +15,8 @@ import CategoryPage from './pages/CategoryPage';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import SearchResults from './pages/SearchResults';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentFailure from './pages/PaymentFailure';
 
 // Import admin components
 import AdminLogin from './components/admin/AdminLogin';
@@ -85,6 +87,8 @@ function AppContent() {
           <Route path="/search" element={<SearchResults />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
+          <Route path="/payment/failure" element={<PaymentFailure />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

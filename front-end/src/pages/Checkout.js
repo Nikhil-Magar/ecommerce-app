@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import CryptoJS from 'crypto-js';
 import './Checkout.css';
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { cartItems, getTotalPrice, clearCart } = useCart();
+  const { cartItems, getTotalPrice } = useCart();
   const [selectedPayment, setSelectedPayment] = useState('');
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -29,10 +29,92 @@ export default function Checkout() {
     setSelectedPayment(method);
   };
 
+  // eSewa v2 Configuration
+  const ESEWA_CONFIG = {
+    merchant_code: "EPAYTEST",
+    secret_key: "8gBm/:&EnhH.1/q",
+    success_url: `${window.location.origin}/payment/success`,
+    failure_url: `${window.location.origin}/payment/failure`,
+    payment_url: "https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+  };
+
+  // Generate HMAC-SHA256 signature
+  const generateSignature = (message) => {
+    const hash = CryptoJS.HmacSHA256(message, ESEWA_CONFIG.secret_key);
+    return CryptoJS.enc.Base64.stringify(hash);
+  };
+
+  const handleEsewaPayment = () => {
+    const subtotal = getTotalPrice();
+    const tax = subtotal * 0.13; // 13% VAT in Nepal
+    const total = subtotal + tax;
+    
+    // Generate unique transaction UUID
+    const transactionUuid = `TXN-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Calculate amounts (eSewa requires in paisa, multiply by 100)
+    const totalAmount = Math.round(total * 100); // Convert to paisa
+    const taxAmount = Math.round(tax * 100);
+    const productServiceCharge = 0;
+    const productDeliveryCharge = 0;
+    const amount = totalAmount - taxAmount - productServiceCharge - productDeliveryCharge;
+    
+    // Create message for signature
+    const message = `total_amount=${totalAmount},transaction_uuid=${transactionUuid},product_code=${ESEWA_CONFIG.merchant_code}`;
+    
+    // Generate signature
+    const signature = generateSignature(message);
+    
+    // Create form data
+    const esewaPayload = {
+      amount: amount,
+      tax_amount: taxAmount,
+      total_amount: totalAmount,
+      transaction_uuid: transactionUuid,
+      product_code: ESEWA_CONFIG.merchant_code,
+      product_service_charge: productServiceCharge,
+      product_delivery_charge: productDeliveryCharge,
+      success_url: ESEWA_CONFIG.success_url,
+      failure_url: ESEWA_CONFIG.failure_url,
+      signed_field_names: "total_amount,transaction_uuid,product_code",
+      signature: signature
+    };
+    
+    // Store order details
+    localStorage.setItem('pendingOrder', JSON.stringify({
+      transactionUuid,
+      orderDetails: {
+        items: cartItems,
+        customerInfo: formData,
+        amounts: {
+          subtotal,
+          tax,
+          total
+        }
+      },
+      timestamp: Date.now()
+    }));
+    
+    // Submit form to eSewa
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = ESEWA_CONFIG.payment_url;
+    
+    Object.keys(esewaPayload).forEach(key => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = esewaPayload[key];
+      form.appendChild(input);
+    });
+    
+    document.body.appendChild(form);
+    form.submit();
+  };
+
   const handleCheckout = (e) => {
     e.preventDefault();
 
-    // Validate form
     if (!formData.name || !formData.email || !formData.phone || !formData.address) {
       alert('❌ Please fill in all required fields');
       return;
@@ -43,38 +125,19 @@ export default function Checkout() {
       return;
     }
 
-    // Show payment modal
-    setShowPaymentModal(true);
-  };
-
-  const simulatePayment = () => {
     setProcessing(true);
 
-    // Simulate payment processing
-    setTimeout(() => {
+    if (selectedPayment === 'eSewa') {
+      handleEsewaPayment();
+    } else {
+      alert(`${selectedPayment} integration coming soon! For now, please use eSewa.`);
       setProcessing(false);
-      setShowPaymentModal(false);
-      
-      // Show success message
-      alert(`✅ Payment successful via ${selectedPayment}!\n\nOrder Details:\nTotal: NPR ${(getTotalPrice() * 1.1 * 132).toFixed(2)}\nItems: ${cartItems.length}\n\nThank you for your purchase!`);
-      
-      // Clear cart
-      clearCart();
-      
-      // Redirect to home
-      navigate('/home');
-    }, 3000);
-  };
-
-  const cancelPayment = () => {
-    setShowPaymentModal(false);
-    setProcessing(false);
+    }
   };
 
   const subtotal = getTotalPrice();
-  const tax = subtotal * 0.1;
+  const tax = subtotal * 0.13; // 13% VAT
   const total = subtotal + tax;
-  const totalNPR = total * 132; // Convert to NPR (approximate)
 
   if (cartItems.length === 0) {
     return (
@@ -183,10 +246,11 @@ export default function Checkout() {
                     <span className="payment-name">eSewa</span>
                   </div>
                   {selectedPayment === 'eSewa' && <span className="check-mark">✓</span>}
+                  <span className="payment-badge">LIVE</span>
                 </div>
 
                 <div 
-                  className={`payment-option ${selectedPayment === 'Khalti' ? 'selected' : ''}`}
+                  className={`payment-option ${selectedPayment === 'Khalti' ? 'selected' : ''} disabled`}
                   onClick={() => handlePaymentSelect('Khalti')}
                 >
                   <div className="payment-logo khalti-logo">
@@ -194,10 +258,11 @@ export default function Checkout() {
                     <span className="payment-name">Khalti</span>
                   </div>
                   {selectedPayment === 'Khalti' && <span className="check-mark">✓</span>}
+                  <span className="payment-badge coming-soon">Coming Soon</span>
                 </div>
 
                 <div 
-                  className={`payment-option ${selectedPayment === 'fonepay' ? 'selected' : ''}`}
+                  className={`payment-option ${selectedPayment === 'fonepay' ? 'selected' : ''} disabled`}
                   onClick={() => handlePaymentSelect('fonepay')}
                 >
                   <div className="payment-logo fonepay-logo">
@@ -205,13 +270,28 @@ export default function Checkout() {
                     <span className="payment-name">fonepay</span>
                   </div>
                   {selectedPayment === 'fonepay' && <span className="check-mark">✓</span>}
+                  <span className="payment-badge coming-soon">Coming Soon</span>
                 </div>
               </div>
             </div>
 
-            <button type="submit" className="place-order-btn">
-              Place Order - NPR {totalNPR.toFixed(2)}
+            <button 
+              type="submit" 
+              className="place-order-btn"
+              disabled={processing}
+            >
+              {processing ? 'Processing...' : `Pay with ${selectedPayment || 'Selected Method'} - NPR ${total.toFixed(2)}`}
             </button>
+
+            {selectedPayment === 'eSewa' && (
+              <div className="payment-info">
+                <p className="info-text">
+                  ✓ Secure payment powered by eSewa<br/>
+                  ✓ You will be redirected to eSewa payment page<br/>
+                  ✓ Complete payment and return to see your order
+                </p>
+              </div>
+            )}
           </form>
         </div>
 
@@ -226,7 +306,7 @@ export default function Checkout() {
                   <p className="item-name">{item.name}</p>
                   <p className="item-quantity">Qty: {item.quantity}</p>
                 </div>
-                <p className="item-price">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="item-price">NPR {item.price.toFixed(2)}</p>
               </div>
             ))}
           </div>
@@ -234,11 +314,11 @@ export default function Checkout() {
           <div className="summary-totals">
             <div className="summary-row">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>NPR {subtotal.toFixed(2)}</span>
             </div>
             <div className="summary-row">
-              <span>Tax (10%)</span>
-              <span>${tax.toFixed(2)}</span>
+              <span>VAT (13%)</span>
+              <span>NPR {tax.toFixed(2)}</span>
             </div>
             <div className="summary-row">
               <span>Shipping</span>
@@ -246,78 +326,12 @@ export default function Checkout() {
             </div>
             <div className="summary-divider"></div>
             <div className="summary-row total">
-              <span>Total (USD)</span>
-              <span>${total.toFixed(2)}</span>
-            </div>
-            <div className="summary-row total-npr">
-              <span>Total (NPR)</span>
-              <span>NPR {totalNPR.toFixed(2)}</span>
+              <span>Total</span>
+              <span>NPR {total.toFixed(2)}</span>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Payment Modal */}
-      {showPaymentModal && (
-        <div className="payment-modal-overlay">
-          <div className="payment-modal">
-            <div className={`payment-modal-header ${selectedPayment.toLowerCase()}-header`}>
-              <h2>{selectedPayment} Payment</h2>
-              {!processing && (
-                <button className="modal-close" onClick={cancelPayment}>×</button>
-              )}
-            </div>
-
-            <div className="payment-modal-body">
-              {processing ? (
-                <div className="processing-payment">
-                  <div className="payment-spinner"></div>
-                  <p>Processing payment...</p>
-                  <p className="payment-amount">NPR {totalNPR.toFixed(2)}</p>
-                </div>
-              ) : (
-                <div className="payment-simulation">
-                  <div className="payment-details">
-                    <h3>Payment Details</h3>
-                    <div className="detail-row">
-                      <span>Merchant:</span>
-                      <span>Bagmati E-commerce</span>
-                    </div>
-                    <div className="detail-row">
-                      <span>Amount:</span>
-                      <span className="amount-highlight">NPR {totalNPR.toFixed(2)}</span>
-                    </div>
-                    <div className="detail-row">
-                      <span>Payment Method:</span>
-                      <span>{selectedPayment}</span>
-                    </div>
-                  </div>
-
-                  <div className="simulation-note">
-                    <p>🔔 This is a simulated payment for local testing</p>
-                    <p>No real money will be charged</p>
-                  </div>
-
-                  <div className="mock-credentials">
-                    <p><strong>Test Credentials:</strong></p>
-                    <p>Phone: 9800000000</p>
-                    <p>PIN: 1234</p>
-                  </div>
-
-                  <div className="payment-actions">
-                    <button className="pay-btn" onClick={simulatePayment}>
-                      Pay Now
-                    </button>
-                    <button className="cancel-btn" onClick={cancelPayment}>
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

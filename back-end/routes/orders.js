@@ -1,44 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
+const Order = require('../models/Order');
 
-// Order Schema
-const orderSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  items: [{
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true
-    },
-    name: String,
-    price: Number,
-    quantity: Number
-  }],
-  total: {
-    type: Number,
-    required: true
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
-    default: 'pending'
-  },
-  customerInfo: {
-    name: String,
-    email: String,
-    phone: String,
-    address: String
-  }
-}, {
-  timestamps: true
-});
-
-const Order = mongoose.models.Order || mongoose.model('Order', orderSchema);
 
 // GET all orders
 router.get('/', async (req, res) => {
